@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: employee_db
+      MYSQL_USER: employee_user
+      MYSQL_PASSWORD: test
+    networks:
+      - backend_network
+
+  springbootapp:
+    image: jaisai0506/employee-system-api:0.1
+    container_name: spring_boot_container
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/employee_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: test
+    ports:
+      - "8080:8080"
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge
